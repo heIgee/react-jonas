@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "target": "ES2020",
+    "jsx": "react-jsx",
+    "allowImportingTsExtensions": true,
+    "checkJs": true,
+    "strictNullChecks": false,
+    "strictFunctionTypes": true,
+    "types": ["vite/client"]
+  },
+  "exclude": [
+    "node_modules",
+    "**/node_modules/*"
+  ]
+}
