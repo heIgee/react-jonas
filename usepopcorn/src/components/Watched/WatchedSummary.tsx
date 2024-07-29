@@ -3,10 +3,11 @@ import WatchedMovie from '../../models/WatchedMovie';
 const averageNum = (arr: number[]) =>
   arr.reduce((acc, cur) => acc + cur / arr.length, 0);
 
-export default function WatchedSummary(
-  // prettier-ignore
-  { watched }: { watched: WatchedMovie[] },
-) {
+export default function WatchedSummary({
+  watched,
+}: {
+  watched: WatchedMovie[];
+}) {
   const avgImdbRating = averageNum(watched.map((movie) => movie.imdbRating));
   const avgUserRating = averageNum(watched.map((movie) => movie.userRating));
   const avgRuntime = averageNum(watched.map((movie) => movie.runtime));

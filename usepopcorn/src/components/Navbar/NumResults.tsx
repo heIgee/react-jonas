@@ -1,7 +1,7 @@
-export default function NumResults() {
+export default function NumResults({ num }: { num: number }) {
   return (
     <p className='num-results'>
-      Found <strong>{/* {movies.length} */}X</strong> results
+      Found <strong>{num}</strong> results
     </p>
   );
 }
