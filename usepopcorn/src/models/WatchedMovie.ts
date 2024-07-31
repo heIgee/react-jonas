@@ -2,7 +2,7 @@ export default interface WatchedMovie {
   imdbID: string;
   Title: string;
   Year: string;
-  Poster: URL;
+  Poster: string;
   runtime: number;
   imdbRating: number;
   userRating: number;

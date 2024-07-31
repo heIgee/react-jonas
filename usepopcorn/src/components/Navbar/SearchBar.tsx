@@ -1,14 +1,26 @@
-import { useState } from 'react';
+import { useRef } from 'react';
+import { useKey } from '../../hooks/useKey';
 
-export default function SearchBar() {
-  const [query, setQuery] = useState('');
+export default function SearchBar({
+  query,
+  setQuery,
+}: {
+  query: string;
+  setQuery: (q: string) => void;
+}) {
+  const inputEl = useRef<HTMLInputElement>(null);
+
+  useKey('Enter', () => inputEl.current?.focus());
+
   return (
     <input
+      ref={inputEl}
+      autoFocus
       className='search'
       type='text'
       placeholder='Search movies...'
       value={query}
-      onChange={(e) => setQuery(e.target.value)}
+      onChange={(ev) => setQuery(ev.target.value)}
     />
   );
 }

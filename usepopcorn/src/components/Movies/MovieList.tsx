@@ -1,11 +1,17 @@
 import Movie from '../../models/Movie';
 import MovieCard from './MovieCard';
 
-export default function MovieList({ movies }: { movies: Movie[] }) {
+export default function MovieList({
+  movies,
+  onSelectMovie,
+}: {
+  movies: Movie[];
+  onSelectMovie: (id: string) => void;
+}) {
   return (
-    <ul className='list'>
+    <ul className='list list-movies'>
       {movies.map((m) => (
-        <MovieCard movie={m} />
+        <MovieCard key={m.imdbID} movie={m} onSelectMovie={onSelectMovie} />
       ))}
     </ul>
   );

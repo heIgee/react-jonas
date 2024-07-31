@@ -1,23 +1,28 @@
 import WatchedMovie from '../../models/WatchedMovie';
 
 const averageNum = (arr: number[]) =>
-  arr.reduce((acc, cur) => acc + cur / arr.length, 0);
+  // this '+' removes redundant zeros
+  +arr.reduce((acc, cur) => acc + cur / arr.length, 0).toFixed(2);
 
 export default function WatchedSummary({
-  watched,
+  watchedMovies,
 }: {
-  watched: WatchedMovie[];
+  watchedMovies: WatchedMovie[];
 }) {
-  const avgImdbRating = averageNum(watched.map((movie) => movie.imdbRating));
-  const avgUserRating = averageNum(watched.map((movie) => movie.userRating));
-  const avgRuntime = averageNum(watched.map((movie) => movie.runtime));
+  const avgImdbRating = averageNum(
+    watchedMovies.map((movie) => movie.imdbRating),
+  );
+  const avgUserRating = averageNum(
+    watchedMovies.map((movie) => movie.userRating),
+  );
+  const avgRuntime = averageNum(watchedMovies.map((movie) => movie.runtime));
   return (
     <div className='summary'>
       <h2>Movies you watched</h2>
       <div>
         <p>
           <span>#️⃣</span>
-          <span>{watched.length} movies</span>
+          <span>{watchedMovies.length} movies</span>
         </p>
         <p>
           <span>⭐️</span>

@@ -1,11 +1,17 @@
 import WatchedMovie from '../../models/WatchedMovie';
 import WatchedCard from './WatchedCard';
 
-export default function WatchedList({ watched }: { watched: WatchedMovie[] }) {
+export default function WatchedList({
+  watchedMovies,
+  onRemoveWatched,
+}: {
+  watchedMovies: WatchedMovie[];
+  onRemoveWatched: (id: string) => void;
+}) {
   return (
     <ul className='list'>
-      {watched.map((m) => (
-        <WatchedCard movie={m} />
+      {watchedMovies.map((m) => (
+        <WatchedCard movie={m} onRemoveWatched={onRemoveWatched} />
       ))}
     </ul>
   );

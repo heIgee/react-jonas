@@ -124,6 +124,7 @@ body {
 .num-results {
   justify-self: end;
   font-size: 1.8rem;
+  min-width: 16rem;
 }
 
 .btn-toggle {
@@ -296,6 +297,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 2.4rem;
+  max-width: 100%;
+  width: 100%;
 }
 
 .btn-add {
@@ -370,10 +373,15 @@ body {
 
   .box {
     margin-top: 2rem;
-    min-height: 4rem;
+    /* min-height: 64rem; */
+    /* min-height: max-content; */
+    flex: 1;
     width: 90vw !important;
   }
 
+  .details section {
+    padding: 2rem;
+  }
 }
 
 @media (width < 480px) {
@@ -381,6 +389,19 @@ body {
     display: grid !important;
     grid-template-columns: 1fr 1fr;
     gap: 0.8rem !important;
+  }
+
+  .rating {
+    background-color: var(--color-background-500);
+    padding: 0;
+  }
+
+  .rating * {
+    margin: 0 auto;
+  }
+
+  .rating .btn-add {
+    margin: 0;
   }
 }
 

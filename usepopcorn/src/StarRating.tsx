@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 
 const containerStyle: React.CSSProperties = {
   display: 'flex',
+  justifyContent: 'space-between',
   alignItems: 'center',
   gap: '1rem',
 };
