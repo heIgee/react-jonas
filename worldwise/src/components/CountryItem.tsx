@@ -1,10 +1,13 @@
-import styles from "./CountryItem.module.css";
+import { Country } from '../models/Country';
+import { flagEmojiToPNG } from '../utils/flagEmojiToPNG';
+import styles from './CountryItem.module.css';
 
-function CountryItem({ country }) {
+function CountryItem({ country }: { country: Country }) {
+  const { countryName, emoji } = country;
   return (
     <li className={styles.countryItem}>
-      <span>{country.emoji}</span>
-      <span>{country.country}</span>
+      <span>{flagEmojiToPNG(emoji)}</span>
+      <span>{countryName}</span>
     </li>
   );
 }

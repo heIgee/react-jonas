@@ -5,6 +5,11 @@ import Pricing from './pages/Pricing';
 import NotFound from './pages/NotFound';
 import AppLayout from './pages/AppLayout';
 import Login from './pages/Login';
+import CityList from './components/CityList';
+import { CityProvider } from './context/CityContext';
+import CountryList from './components/CountryList';
+import CityCard from './components/CityCard';
+import Form from './components/Form';
 
 export default function App() {
   return (
@@ -14,11 +19,19 @@ export default function App() {
         <Route path='/product' element={<Product />} />
         <Route path='/pricing' element={<Pricing />} />
         <Route path='/login' element={<Login />} />
-        <Route path='/app' element={<AppLayout />}>
-          <Route index element={<Navigate to='/app/cities' replace />} />
-          <Route path='cities' element={<p>List of cities</p>} />
-          <Route path='countries' element={<p>List of countries</p>} />
-          <Route path='form' element={<p>Some form</p>} />
+        <Route
+          path='/app'
+          element={
+            <CityProvider>
+              <AppLayout />
+            </CityProvider>
+          }
+        >
+          <Route index element={<Navigate to='cities' replace />} />
+          <Route path='cities' element={<CityList />} />
+          <Route path='cities/:id' element={<CityCard />} />
+          <Route path='countries' element={<CountryList />} />
+          <Route path='form' element={<Form />} />
         </Route>
         <Route path='/*' element={<NotFound />} />
       </Routes>

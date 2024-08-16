@@ -1,14 +1,8 @@
-import styles from './City.module.css';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { formatISODate } from '../utils/formatISODate';
+import styles from './CityCard.module.css';
 
-const formatDate = (date) =>
-  new Intl.DateTimeFormat('en', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-    weekday: 'long',
-  }).format(new Date(date));
-
-function City() {
+function CityCard() {
   // TEMP DATA
   const currentCity = {
     cityName: 'Lisbon',
@@ -17,7 +11,21 @@ function City() {
     notes: 'My favorite city so far!',
   };
 
+  const { id } = useParams();
+
+  const [searchParams] = useSearchParams();
+  const lat = searchParams.get('lat');
+  const lng = searchParams.get('lng');
+
   const { cityName, emoji, date, notes } = currentCity;
+
+  return (
+    <h1>
+      City {id}
+      {lat}
+      {lng}
+    </h1>
+  );
 
   return (
     <div className={styles.city}>
@@ -30,7 +38,7 @@ function City() {
 
       <div className={styles.row}>
         <h6>You went to {cityName} on</h6>
-        <p>{formatDate(date || null)}</p>
+        <p>{date && formatISODate(date)}</p>
       </div>
 
       {notes && (
@@ -51,11 +59,9 @@ function City() {
         </a>
       </div>
 
-      <div>
-        <ButtonBack />
-      </div>
+      <div>{/* <ButtonBack /> */}</div>
     </div>
   );
 }
 
-export default City;
+export default CityCard;
