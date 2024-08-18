@@ -1,4 +1,4 @@
-export const flagEmojiToPNG = (flag: string) => {
+export const flagEmojiToCode = (flag: string) => {
   try {
     const countryCode = Array.from(flag)
       .map((codeUnit) => {
@@ -9,9 +9,7 @@ export const flagEmojiToPNG = (flag: string) => {
         return String.fromCharCode(codePoint - 127397).toLowerCase();
       })
       .join('');
-    return (
-      <img src={`https://flagcdn.com/24x18/${countryCode}.png`} alt='flag' />
-    );
+    return countryCode;
   } catch (err) {
     return flag;
   }

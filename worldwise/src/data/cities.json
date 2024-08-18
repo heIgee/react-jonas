@@ -12,7 +12,7 @@
         "lat": 38.727881642324164,
         "lng": -9.140900099907554
       },
-      "id": 73930385
+      "id": "73930385"
     },
     {
       "cityName": "Madrid",
@@ -26,21 +26,63 @@
         "lat": 40.46635901755316,
         "lng": -3.7133789062500004
       },
-      "id": 17806751
+      "id": "17806751"
     },
     {
-      "cityName": "Berlin",
+      "id": "dcd7ea48-3aed-4781-a4ae-502efa656ef3",
+      "cityName": "Niederau",
       "country": {
         "countryName": "Germany",
         "emoji": "🇩🇪"
       },
-      "date": "2027-02-12T09:24:11.863Z",
-      "notes": "Amazing 😃",
+      "date": "Sun Aug 18 2024 19:32:52 GMT+0300 (Eastern European Summer Time)",
+      "notes": "",
       "position": {
-        "lat": 52.53586782505711,
-        "lng": 13.376933665713324
+        "lat": 51.178433262173385,
+        "lng": 13.53045953634241
+      }
+    },
+    {
+      "id": "064eaa48-7ba5-43e7-905b-6f70458d819b",
+      "cityName": "Lycksele",
+      "country": {
+        "countryName": "Sweden",
+        "emoji": "🇸🇪"
       },
-      "id": 98443197
+      "date": "Sun Aug 18 2024 19:33:06 GMT+0300 (Eastern European Summer Time)",
+      "notes": "",
+      "position": {
+        "lat": 64.95948056656206,
+        "lng": 18.269196783116744
+      }
+    },
+    {
+      "id": "a3bfac45-738f-4ddd-9d4e-d6777e92d887",
+      "cityName": "Chernivtsi",
+      "country": {
+        "countryName": "Ukraine",
+        "emoji": "🇺🇦"
+      },
+      "date": "Sun Aug 18 2024 19:33:18 GMT+0300 (Eastern European Summer Time)",
+      "notes": "",
+      "position": {
+        "lat": 48.2915,
+        "lng": 25.9403
+      }
+    },
+    {
+      "id": "c0b3d187-eb37-4f8a-83de-2af98d2250a4",
+      "cityName": "Cadavica",
+      "country": {
+        "countryName": "Croatia",
+        "emoji": "🇭🇷"
+      },
+      "date": "Sun Aug 18 2024 19:33:41 GMT+0300 (Eastern European Summer Time)",
+      "notes": "",
+      "position": {
+        "lat": 45.76602226872573,
+        "lng": 17.880272279200536
+      }
     }
   ]
 }

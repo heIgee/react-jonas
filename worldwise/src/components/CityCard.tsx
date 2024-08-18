@@ -1,38 +1,47 @@
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { formatISODate } from '../utils/formatISODate';
 import styles from './CityCard.module.css';
+import { flagEmojiToCode } from '../utils/flagEmojiToCode';
+import { useCities } from '../context/CityContext';
+import { useEffect } from 'react';
+import Button from './Button';
+import FlagImg from './FlagImg';
+import Spinner from './Spinner';
 
 function CityCard() {
-  // TEMP DATA
-  const currentCity = {
-    cityName: 'Lisbon',
-    emoji: '🇵🇹',
-    date: '2027-10-31T15:59:59.138Z',
-    notes: 'My favorite city so far!',
-  };
-
   const { id } = useParams();
+  const { getCity, currentCity, isLoading } = useCities();
 
-  const [searchParams] = useSearchParams();
-  const lat = searchParams.get('lat');
-  const lng = searchParams.get('lng');
+  // const [searchParams] = useSearchParams();
+  // const lat = searchParams.get('lat');
+  // const lng = searchParams.get('lng');
 
-  const { cityName, emoji, date, notes } = currentCity;
+  const navigate = useNavigate();
 
-  return (
-    <h1>
-      City {id}
-      {lat}
-      {lng}
-    </h1>
-  );
+  useEffect(() => {
+    id && getCity(id);
+  }, [id]); // TODO getCity may break things
+
+  // TODO causes infinite lag ? no more
+  if (isLoading) return <Spinner />;
+  if (!currentCity) return;
+
+  const {
+    cityName,
+    country: { emoji },
+    date,
+    notes,
+  } = currentCity;
 
   return (
     <div className={styles.city}>
       <div className={styles.row}>
         <h6>City name</h6>
         <h3>
-          <span>{emoji}</span> {cityName}
+          <span>
+            <FlagImg countryCode={flagEmojiToCode(emoji)} />
+          </span>
+          {cityName}
         </h3>
       </div>
 
@@ -59,7 +68,11 @@ function CityCard() {
         </a>
       </div>
 
-      <div>{/* <ButtonBack /> */}</div>
+      <div>
+        <Button variant='back' onClick={() => navigate(-1)}>
+          &larr; Back
+        </Button>
+      </div>
     </div>
   );
 }

@@ -4,17 +4,19 @@ import styles from './Button.module.css';
 export default function Button({
   children,
   onClick,
-  type,
+  variant,
+  type = 'button',
 }: {
   children: ReactNode;
   onClick: MouseEventHandler<HTMLButtonElement>;
-  type: 'primary' | 'back' | 'position';
+  variant: 'primary' | 'back' | 'position';
+  type?: 'button' | 'submit';
 }) {
   return (
     <button
-      type='button'
+      type={type}
       onClick={onClick}
-      className={`${styles.btn} ${styles[type]}`}
+      className={`${styles.btn} ${styles[variant]}`}
     >
       {children}
     </button>

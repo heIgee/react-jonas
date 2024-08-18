@@ -6,10 +6,10 @@ interface Position {
 }
 
 export interface City {
+  id: string;
   cityName: string;
   country: Country;
   date: string; // ISO
   notes: string;
   position: Position;
-  id: string;
 }
