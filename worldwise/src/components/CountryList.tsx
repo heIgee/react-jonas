@@ -7,7 +7,9 @@ import { City } from '../models/City';
 import { Country } from '../models/Country';
 
 export default function CountryList() {
-  const { cities, isLoading } = useCities();
+  const {
+    cityState: { cities, isLoading },
+  } = useCities();
   return isLoading ? (
     <Spinner />
   ) : !cities || !cities.length ? (

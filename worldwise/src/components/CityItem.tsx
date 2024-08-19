@@ -7,7 +7,10 @@ import { flagEmojiToCode } from '../utils/flagEmojiToCode';
 import { formatISODate } from '../utils/formatISODate';
 
 export default function CityItem({ city }: { city: City }) {
-  const { currentCity, deleteCity } = useCities();
+  const {
+    cityState: { currentCity },
+    deleteCity,
+  } = useCities();
   const {
     cityName,
     country: { emoji },

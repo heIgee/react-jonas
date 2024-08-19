@@ -83,6 +83,34 @@
         "lat": 45.76602226872573,
         "lng": 17.880272279200536
       }
+    },
+    {
+      "id": "0acff0ad-5235-4343-ab3c-6d83af2ba18b",
+      "cityName": "Thurnbach",
+      "country": {
+        "countryName": "Austria",
+        "emoji": "🇦🇹"
+      },
+      "date": "Mon Aug 19 2024 10:21:32 GMT+0300 (Eastern European Summer Time)",
+      "notes": "",
+      "position": {
+        "lat": 47.27157423981326,
+        "lng": 11.851905756216611
+      }
+    },
+    {
+      "id": "a7798f5b-3607-4053-9657-d209fae9476b",
+      "cityName": "Lachapelle",
+      "country": {
+        "countryName": "France",
+        "emoji": "🇫🇷"
+      },
+      "date": "Mon Aug 19 2024 10:21:34 GMT+0300 (Eastern European Summer Time)",
+      "notes": "",
+      "position": {
+        "lat": 48.4279953601867,
+        "lng": 6.7618585354160095
+      }
     }
   ]
 }

@@ -17,7 +17,10 @@ import { useUrlLocation } from '../hooks/useUrlLocation';
 import { flagEmojiToCode } from '../utils/flagEmojiToCode';
 
 export default function Map() {
-  const { cities, currentCity } = useCities();
+  const {
+    cityState: { cities, currentCity },
+  } = useCities();
+
   const { position: cityPosition } = currentCity ?? {
     position: /* Lichtenstein */ { lat: 47, lng: 9.5 },
   };

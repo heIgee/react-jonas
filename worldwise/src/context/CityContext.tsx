@@ -1,16 +1,94 @@
 import {
   createContext,
   useContext,
-  useState,
   useEffect,
   ReactNode,
+  Reducer,
+  useReducer,
 } from 'react';
 import { City } from '../models/City';
 
-interface CityContextType {
+interface CityState {
   cities: City[] | null;
   isLoading: boolean;
   currentCity: City | null;
+  error: string | null;
+}
+
+type CityAction =
+  | {
+      type: 'cities/loaded';
+      payload: City[];
+    }
+  | {
+      type: 'loading';
+      payload?: never;
+    }
+  | {
+      type: 'rejected';
+      payload: string;
+    }
+  | {
+      type: 'city/selected';
+      payload: City;
+    }
+  | {
+      type: 'cities/created';
+      payload: City;
+    }
+  | {
+      type: 'cities/deleted';
+      payload: string;
+    };
+
+const cityReducer: Reducer<CityState, CityAction> = (state, action) => {
+  switch (action.type) {
+    case 'cities/loaded': {
+      const cities = action.payload;
+      return { ...state, cities, isLoading: false };
+    }
+    case 'loading': {
+      return { ...state, isLoading: true };
+    }
+    case 'rejected': {
+      const error = action.payload;
+      return { ...state, error, isLoading: false };
+    }
+    case 'city/selected': {
+      const currentCity = action.payload;
+      return { ...state, currentCity };
+    }
+    case 'cities/created': {
+      const newCity = action.payload;
+      return {
+        ...state,
+        cities: state.cities ? [...state.cities, newCity] : null,
+      };
+    }
+    case 'cities/deleted': {
+      const idToDelete = action.payload;
+      return {
+        ...state,
+        cities: state.cities
+          ? state.cities.filter((city) => city.id !== idToDelete)
+          : null,
+      };
+    }
+    default: {
+      throw new Error(`Invalid city action: ${action}`);
+    }
+  }
+};
+
+const initState: CityState = {
+  cities: null,
+  isLoading: false,
+  currentCity: null,
+  error: null,
+};
+
+interface CityContextType {
+  cityState: CityState;
   getCity: (id: string) => Promise<void>;
   postCity: (newCity: City) => Promise<void>;
   deleteCity: (id: string) => Promise<void>;
@@ -21,30 +99,39 @@ const CityContext = createContext<CityContextType | undefined>(undefined);
 export const SERVER_URL = 'http://localhost:8000';
 
 export const CityProvider = ({ children }: { children: ReactNode }) => {
-  const [cities, setCities] = useState<City[] | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [currentCity, setCurrentCity] = useState<City | null>(null);
+  const [cityState, dispatchCities] = useReducer(cityReducer, initState);
 
   useEffect(() => {
-    setIsLoading(true);
+    dispatchCities({ type: 'loading' });
     fetch(`${SERVER_URL}/cities`)
       .then((res) => res.json())
-      .then((data) => setCities(data))
-      .catch((err) => console.error(err))
-      .finally(() => setIsLoading(false));
+      .then((data) => dispatchCities({ type: 'cities/loaded', payload: data }))
+      .catch((err) => {
+        console.error(err);
+        dispatchCities({
+          type: 'rejected',
+          payload: err?.message || 'Error loading cities',
+        });
+      });
   }, []);
 
   const getCity = async (id: string) => {
-    setIsLoading(true);
+    if (id === cityState.currentCity?.id) return;
+    dispatchCities({ type: 'loading' });
     fetch(`${SERVER_URL}/cities/${id}`)
       .then((res) => res.json())
-      .then((data) => setCurrentCity(data))
-      .catch((err) => console.error(err))
-      .finally(() => setIsLoading(false));
+      .then((data) => dispatchCities({ type: 'city/selected', payload: data }))
+      .catch((err) => {
+        console.error(err);
+        dispatchCities({
+          type: 'rejected',
+          payload: err?.message || 'Error getting city',
+        });
+      });
   };
 
   const postCity = async (newCity: City) => {
-    setIsLoading(true);
+    dispatchCities({ type: 'loading' });
     fetch(`${SERVER_URL}/cities`, {
       method: 'POST',
       body: JSON.stringify(newCity),
@@ -54,30 +141,36 @@ export const CityProvider = ({ children }: { children: ReactNode }) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        setCities((prev) => (prev ? [...prev, data] : null));
-        setCurrentCity(data);
+        dispatchCities({ type: 'cities/created', payload: data });
+        dispatchCities({ type: 'city/selected', payload: data });
       })
-      .catch((err) => console.error(err))
-      .finally(() => setIsLoading(false));
+      .catch((err) => {
+        console.error(err);
+        dispatchCities({
+          type: 'rejected',
+          payload: err?.message || 'Error posting city',
+        });
+      });
   };
 
   const deleteCity = async (id: string) => {
-    setIsLoading(true);
+    dispatchCities({ type: 'loading' });
     fetch(`${SERVER_URL}/cities/${id}`, { method: 'DELETE' })
       .then((res) => res.json())
       .then((data) => {
-        setCities((prev) =>
-          prev ? prev.filter((c) => c.id !== data.id) : null,
-        );
+        dispatchCities({ type: 'cities/deleted', payload: data?.id });
       })
-      .catch((err) => console.error(err))
-      .finally(() => setIsLoading(false));
+      .catch((err) => {
+        console.error(err);
+        dispatchCities({
+          type: 'rejected',
+          payload: err?.message || 'Error deleting city',
+        });
+      });
   };
 
   return (
-    <CityContext.Provider
-      value={{ cities, isLoading, currentCity, getCity, postCity, deleteCity }}
-    >
+    <CityContext.Provider value={{ cityState, getCity, postCity, deleteCity }}>
       {children}
     </CityContext.Provider>
   );

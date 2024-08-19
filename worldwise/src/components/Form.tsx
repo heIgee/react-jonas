@@ -1,4 +1,4 @@
-import { FormEvent, useCallback, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import styles from './Form.module.css';
@@ -11,12 +11,17 @@ import { useUrlLocation } from '../hooks/useUrlLocation';
 import { City } from '../models/City';
 import { codeToFlagEmoji } from '../utils/codeToFlagEmoji';
 
-const GEOCODE_URL = 'https://api.bigdatacloud.net/data/reverse-geocode-client';
+const GEOCODE_URL = 'https://api.bigdatacloud.net/data/reverse-geocode';
 
 function Form() {
+  console.warn('FORM');
+
   const navigate = useNavigate();
 
-  const { isLoading, postCity } = useCities();
+  const {
+    cityState: { isLoading },
+    postCity,
+  } = useCities();
 
   const { lat, lng } = useUrlLocation() ?? { lat: 0, lng: 0 };
 
@@ -30,9 +35,18 @@ function Form() {
         setIsLoadingGeocoding(true);
         setGeocodingError(null);
 
+        // TODO TODO TODO
+        // 402/403 here breaks entire app
+        // after using user location button,
+        // city list redirects to form immediately
+
         const res = await fetch(
           `${GEOCODE_URL}?latitude=${lat}&longitude=${lng}`,
         );
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(errorText);
+        }
         const data = await res.json();
         if (!data.countryCode) {
           throw new Error('That does not seem to be a city');
@@ -56,22 +70,21 @@ function Form() {
   const [date, setDate] = useState(new Date());
   const [notes, setNotes] = useState('');
 
-  const handleSubmit = useCallback(() => {
-    async (ev: FormEvent) => {
-      ev.preventDefault();
-      if (!cityName || !date) return;
-      const newCity: City = {
-        id: crypto.randomUUID(),
-        cityName,
-        country: { countryName, emoji },
-        date: date.toString(),
-        notes,
-        position: { lat, lng },
-      };
-      await postCity(newCity);
-      navigate('/app/cities');
+  const handleSubmit = async (ev: FormEvent) => {
+    console.log(ev);
+    ev.preventDefault();
+    if (!cityName || !date) return;
+    const newCity: City = {
+      id: crypto.randomUUID(),
+      cityName,
+      country: { countryName, emoji },
+      date: date.toString(),
+      notes,
+      position: { lat, lng },
     };
-  }, [cityName, countryName, date, emoji, lat, lng, navigate, notes, postCity]);
+    await postCity(newCity);
+    navigate('/app/cities');
+  };
 
   if (isLoadingGeocoding) return <Spinner />;
 
