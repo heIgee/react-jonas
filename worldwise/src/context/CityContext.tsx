@@ -180,7 +180,7 @@ export const CityProvider = ({ children }: { children: ReactNode }) => {
 export const useCities = (): CityContextType => {
   const context = useContext(CityContext);
   if (context === undefined) {
-    throw new Error('useCityContext must be used within a CityProvider');
+    throw new Error('CityContext must be used within a CityProvider');
   }
   return context;
 };

@@ -13,7 +13,7 @@ import { codeToFlagEmoji } from '../utils/codeToFlagEmoji';
 
 const GEOCODE_URL = 'https://api.bigdatacloud.net/data/reverse-geocode';
 
-function Form() {
+export default function Form() {
   console.warn('FORM');
 
   const navigate = useNavigate();
@@ -137,5 +137,3 @@ function Form() {
     </form>
   );
 }
-
-export default Form;

@@ -9,10 +9,7 @@ export default function Sidebar() {
     <div className={styles.sidebar}>
       <Logo />
       <AppNav />
-      {/* <p>List of cities</p> */}
-
       <Outlet />
-
       <Footer />
     </div>
   );

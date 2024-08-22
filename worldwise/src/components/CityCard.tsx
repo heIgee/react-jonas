@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 import Button from './Button';
 import FlagImg from './FlagImg';
 
-function CityCard() {
+export default function CityCard() {
   const { id } = useParams();
   const {
     cityState: { currentCity },
@@ -78,5 +78,3 @@ function CityCard() {
     </div>
   );
 }
-
-export default CityCard;

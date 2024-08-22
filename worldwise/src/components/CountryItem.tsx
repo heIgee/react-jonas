@@ -3,7 +3,7 @@ import FlagImg from './FlagImg';
 import { Country } from '../models/Country';
 import { flagEmojiToCode } from '../utils/flagEmojiToCode';
 
-function CountryItem({ country }: { country: Country }) {
+export default function CountryItem({ country }: { country: Country }) {
   const { countryName, emoji } = country;
   return (
     <li className={styles.countryItem}>
@@ -14,5 +14,3 @@ function CountryItem({ country }: { country: Country }) {
     </li>
   );
 }
-
-export default CountryItem;
