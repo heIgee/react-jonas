@@ -45,13 +45,15 @@ const fakeUserReducer: Reducer<FakeUserState, FakeUserAction> = (
   }
 };
 
-interface FakeAuthContextType {
+interface FakeUserContextType {
   fakeUserState: FakeUserState;
   login: (email: string, password: string) => void;
   logout: () => void;
 }
 
-const AuthContext = createContext<FakeAuthContextType | undefined>(undefined);
+const FakeUserContext = createContext<FakeUserContextType | undefined>(
+  undefined,
+);
 
 const FAKE_USER = {
   name: 'Jack',
@@ -77,17 +79,17 @@ export function FakeUserProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ fakeUserState, login, logout }}>
+    <FakeUserContext.Provider value={{ fakeUserState, login, logout }}>
       {children}
-    </AuthContext.Provider>
+    </FakeUserContext.Provider>
   );
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function useFakeUser() {
-  const context = useContext(AuthContext);
+  const context = useContext(FakeUserContext);
   if (context === undefined) {
-    throw new Error('FakeAuthContext must be used within a FakeAuthProvider');
+    throw new Error('FakeUserContext must be used within a FakeUserProvider');
   }
   return context;
 }

@@ -1,31 +1,28 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { formatISODate } from '../utils/formatISODate';
-import styles from './CityCard.module.css';
-import { flagEmojiToCode } from '../utils/flagEmojiToCode';
-import { useCities } from '../context/CityContext';
 import { useEffect } from 'react';
+import styles from './CityCard.module.css';
 import Button from './Button';
 import FlagImg from './FlagImg';
+import Spinner from './Spinner';
+import { useCities } from '../context/CityContext';
+import { flagEmojiToCode } from '../utils/flagEmojiToCode';
+import { formatISODate } from '../utils/formatISODate';
 
 export default function CityCard() {
   const { id } = useParams();
   const {
-    cityState: { currentCity },
+    cityState: { currentCity, isLoading },
     getCity,
   } = useCities();
-
-  // const [searchParams] = useSearchParams();
-  // const lat = searchParams.get('lat');
-  // const lng = searchParams.get('lng');
 
   const navigate = useNavigate();
 
   useEffect(() => {
     id && getCity(id);
-  }, [id]); // TODO getCity may break things
+  }, [id, getCity]);
 
-  // TODO causes infinite lag ? no more
-  // if (isLoading) return <Spinner />;
+  if (isLoading) return <Spinner />;
+
   if (!currentCity) return;
 
   const {

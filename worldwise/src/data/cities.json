@@ -111,6 +111,48 @@
         "lat": 48.4279953601867,
         "lng": 6.7618585354160095
       }
+    },
+    {
+      "id": "ebe26e1f-e0b7-4d2b-a87e-256a235315b1",
+      "cityName": "Kolomyia",
+      "country": {
+        "countryName": "Ukraine",
+        "emoji": "🇺🇦"
+      },
+      "date": "Sat Aug 24 2024 14:11:30 GMT+0300 (Eastern European Summer Time)",
+      "notes": "",
+      "position": {
+        "lat": 48.636538782610494,
+        "lng": 25.438842773437504
+      }
+    },
+    {
+      "id": "a545793b-977a-41d0-9b71-28fb83348069",
+      "cityName": "Polotsk",
+      "country": {
+        "countryName": "Belarus",
+        "emoji": "🇧🇾"
+      },
+      "date": "Sat Aug 24 2024 14:21:18 GMT+0300 (Eastern European Summer Time)",
+      "notes": "",
+      "position": {
+        "lat": 55.25407706707272,
+        "lng": 28.366699218750004
+      }
+    },
+    {
+      "id": "dd3572a0-fdf2-4af1-8f83-c33f554f916e",
+      "cityName": "Storuman",
+      "country": {
+        "countryName": "Sweden",
+        "emoji": "🇸🇪"
+      },
+      "date": "Sat Aug 24 2024 14:29:26 GMT+0300 (Eastern European Summer Time)",
+      "notes": "",
+      "position": {
+        "lat": 64.7717840915299,
+        "lng": 17.462768554687504
+      }
     }
   ]
 }

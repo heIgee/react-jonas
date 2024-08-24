@@ -11,11 +11,10 @@ import { useUrlLocation } from '../hooks/useUrlLocation';
 import { City } from '../models/City';
 import { codeToFlagEmoji } from '../utils/codeToFlagEmoji';
 
-const GEOCODE_URL = 'https://api.bigdatacloud.net/data/reverse-geocode';
+const BIGDATACLOUD_KEY = 'bdc_c07172e77dce415e8a9c4f96535598c8';
+const GEOCODE_URL_WITH_KEY = `https://api.bigdatacloud.net/data/reverse-geocode?key=${BIGDATACLOUD_KEY}`;
 
 export default function Form() {
-  console.warn('FORM');
-
   const navigate = useNavigate();
 
   const {
@@ -35,13 +34,8 @@ export default function Form() {
         setIsLoadingGeocoding(true);
         setGeocodingError(null);
 
-        // TODO TODO TODO
-        // 402/403 here breaks entire app
-        // after using user location button,
-        // city list redirects to form immediately
-
         const res = await fetch(
-          `${GEOCODE_URL}?latitude=${lat}&longitude=${lng}`,
+          `${GEOCODE_URL_WITH_KEY}&latitude=${lat}&longitude=${lng}`,
         );
         if (!res.ok) {
           const errorText = await res.text();
@@ -71,7 +65,6 @@ export default function Form() {
   const [notes, setNotes] = useState('');
 
   const handleSubmit = async (ev: FormEvent) => {
-    console.log(ev);
     ev.preventDefault();
     if (!cityName || !date) return;
     const newCity: City = {

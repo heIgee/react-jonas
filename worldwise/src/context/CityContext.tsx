@@ -5,6 +5,8 @@ import {
   ReactNode,
   Reducer,
   useReducer,
+  useMemo,
+  useCallback,
 } from 'react';
 import { City } from '../models/City';
 
@@ -56,7 +58,7 @@ const cityReducer: Reducer<CityState, CityAction> = (state, action) => {
     }
     case 'city/selected': {
       const currentCity = action.payload;
-      return { ...state, currentCity };
+      return { ...state, currentCity, isLoading: false };
     }
     case 'cities/created': {
       const newCity = action.payload;
@@ -115,22 +117,27 @@ export const CityProvider = ({ children }: { children: ReactNode }) => {
       });
   }, []);
 
-  const getCity = async (id: string) => {
-    if (id === cityState.currentCity?.id) return;
-    dispatchCities({ type: 'loading' });
-    fetch(`${SERVER_URL}/cities/${id}`)
-      .then((res) => res.json())
-      .then((data) => dispatchCities({ type: 'city/selected', payload: data }))
-      .catch((err) => {
-        console.error(err);
-        dispatchCities({
-          type: 'rejected',
-          payload: err?.message || 'Error getting city',
+  const getCity = useCallback(
+    async (id: string) => {
+      if (id === cityState.currentCity?.id) return;
+      dispatchCities({ type: 'loading' });
+      fetch(`${SERVER_URL}/cities/${id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          dispatchCities({ type: 'city/selected', payload: data });
+        })
+        .catch((err) => {
+          console.error(err);
+          dispatchCities({
+            type: 'rejected',
+            payload: err?.message || 'Error getting city',
+          });
         });
-      });
-  };
+    },
+    [cityState.currentCity?.id],
+  );
 
-  const postCity = async (newCity: City) => {
+  const postCity = useCallback(async (newCity: City) => {
     dispatchCities({ type: 'loading' });
     fetch(`${SERVER_URL}/cities`, {
       method: 'POST',
@@ -151,9 +158,9 @@ export const CityProvider = ({ children }: { children: ReactNode }) => {
           payload: err?.message || 'Error posting city',
         });
       });
-  };
+  }, []);
 
-  const deleteCity = async (id: string) => {
+  const deleteCity = useCallback(async (id: string) => {
     dispatchCities({ type: 'loading' });
     fetch(`${SERVER_URL}/cities/${id}`, { method: 'DELETE' })
       .then((res) => res.json())
@@ -167,10 +174,20 @@ export const CityProvider = ({ children }: { children: ReactNode }) => {
           payload: err?.message || 'Error deleting city',
         });
       });
-  };
+  }, []);
+
+  const providerValue = useMemo(
+    () => ({
+      cityState,
+      getCity,
+      postCity,
+      deleteCity,
+    }),
+    [cityState, getCity, postCity, deleteCity],
+  );
 
   return (
-    <CityContext.Provider value={{ cityState, getCity, postCity, deleteCity }}>
+    <CityContext.Provider value={providerValue}>
       {children}
     </CityContext.Provider>
   );
