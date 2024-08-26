@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { createCustomer } from './customerSlice';
+import { createCustomer } from './customerSlice-v2';
 
 export default function CreateCustomer() {
   const [fullName, setFullName] = useState('');

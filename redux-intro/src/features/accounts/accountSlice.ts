@@ -1,4 +1,9 @@
-import { ThunkDispatch } from 'redux-thunk';
+import {
+  Action,
+  createSlice,
+  PayloadAction,
+  ThunkDispatch,
+} from '@reduxjs/toolkit';
 
 export interface IAccountState {
   balance: number;
@@ -7,91 +12,73 @@ export interface IAccountState {
   isLoading: boolean;
 }
 
-const initialAccountState: IAccountState = {
+const initialState: IAccountState = {
   balance: 0,
   loan: 0,
   loanPurpose: null,
   isLoading: false,
 };
 
-export type IAccountAction =
-  | {
-      type: 'account/deposit';
-      payload: number;
-    }
-  | {
-      type: 'account/withdraw';
-      payload: number;
-    }
-  | {
-      type: 'account/requestLoan';
-      payload: { amount: number; purpose: string };
-    }
-  | {
-      type: 'account/payLoan';
-    }
-  | {
-      type: 'account/loading';
-    };
+const accountSlice = createSlice({
+  name: 'account',
+  initialState,
+  reducers: {
+    deposit: {
+      prepare(amount: number, currency: string) {
+        return { payload: { amount, currency } };
+      },
+      reducer(
+        state,
+        action: PayloadAction<{ amount: number; currency: string }>,
+      ) {
+        state.balance += action.payload.amount;
+        state.isLoading = false;
+      },
+    },
+    withdraw(state, action: PayloadAction<number>) {
+      state.balance -= action.payload;
+      state.isLoading = false;
+    },
+    requestLoan: {
+      prepare(amount: number, purpose: string) {
+        return { payload: { amount, purpose } };
+      },
+      reducer(
+        state,
+        action: PayloadAction<{ amount: number; purpose: string }>,
+      ) {
+        state.isLoading = false;
+        if (state.loan > 0) return;
+        const { amount, purpose } = action.payload;
+        state.loan = amount;
+        state.loanPurpose = purpose;
+        state.balance += amount;
+      },
+    },
+    payLoan(state) {
+      state.balance -= state.loan;
+      state.loanPurpose = null;
+      state.loan = 0;
+      state.isLoading = false;
+    },
+    loading(state) {
+      state.isLoading = true;
+    },
+  },
+});
 
-export default function accountReducer(
-  state: IAccountState = initialAccountState,
-  action: IAccountAction,
-): IAccountState {
-  switch (action.type) {
-    case 'account/deposit': {
-      return {
-        ...state,
-        balance: state.balance + action.payload,
-        isLoading: false,
-      };
-    }
-    case 'account/withdraw': {
-      return {
-        ...state,
-        balance: state.balance - action.payload,
-        isLoading: false,
-      };
-    }
-    case 'account/requestLoan': {
-      if (state.loan) return state;
-      const { amount, purpose } = action.payload;
-      return {
-        ...state,
-        loan: amount,
-        loanPurpose: purpose,
-        balance: state.balance + amount,
-        isLoading: false,
-      };
-    }
-    case 'account/payLoan': {
-      return {
-        ...state,
-        loan: 0,
-        loanPurpose: null,
-        balance: state.balance - state.loan,
-        isLoading: false,
-      };
-    }
-    case 'account/loading': {
-      return {
-        ...state,
-        isLoading: true,
-      };
-    }
-    default:
-      return state;
-  }
-}
+export const { withdraw, requestLoan, payLoan } = accountSlice.actions;
+export default accountSlice.reducer;
 
 export const deposit = (
   amount: number,
   currency: string,
 ):
-  | ((
-      dispatch: ThunkDispatch<IAccountState, void, IAccountAction>,
-    ) => Promise<void>)
-  | IAccountAction => {
+  | ((dispatch: ThunkDispatch<IAccountState, void, Action>) => Promise<void>)
+  | {
+      type: string;
+      payload: number;
+    } => {
   if (currency === 'USD') {
     return {
       type: 'account/deposit',
@@ -120,20 +107,3 @@ export const deposit = (
     }
   };
 };
-
-export const withdraw = (amount: number): IAccountAction => ({
-  type: 'account/withdraw',
-  payload: amount,
-});
-
-export const requestLoan = (
-  amount: number,
-  purpose: string,
-): IAccountAction => ({
-  type: 'account/requestLoan',
-  payload: { amount, purpose },
-});
-
-export const payLoan = (): IAccountAction => ({
-  type: 'account/payLoan',
-});

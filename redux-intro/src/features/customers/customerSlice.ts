@@ -1,55 +1,50 @@
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 export type ICustomerState = {
   nationalId: string | null;
   fullName: string | null;
   createdAt: string | null;
 };
 
-const initialCustomerState: ICustomerState = {
+const initialState: ICustomerState = {
   fullName: null,
   nationalId: null,
   createdAt: null,
 };
 
-export type ICustomerAction =
-  | {
-      type: 'customer/createCustomer';
-      payload: { fullName: string; nationalId: string; createdAt: string };
-    }
-  | {
-      type: 'customer/updateName';
-      payload: string;
-    };
+const customerSlice = createSlice({
+  name: 'customer',
+  initialState,
+  reducers: {
+    createCustomer: {
+      prepare(fullName: string, nationalId: string) {
+        return {
+          payload: {
+            fullName,
+            nationalId,
+            createdAt: new Date().toISOString(),
+          },
+        };
+      },
+      reducer(
+        state,
+        action: PayloadAction<{
+          fullName: string;
+          nationalId: string;
+          createdAt: string;
+        }>,
+      ) {
+        const { fullName, nationalId, createdAt } = action.payload;
+        state.fullName = fullName;
+        state.nationalId = nationalId;
+        state.createdAt = createdAt;
+      },
+    },
+    updateName(state, action: PayloadAction<string>) {
+      state.fullName = action.payload;
+    },
+  },
+});
 
-export default function customerReducer(
-  state: ICustomerState = initialCustomerState,
-  action: ICustomerAction,
-): ICustomerState {
-  switch (action.type) {
-    case 'customer/createCustomer': {
-      const { fullName, nationalId, createdAt } = action.payload;
-      return { ...state, fullName, nationalId, createdAt };
-    }
-    case 'customer/updateName': {
-      return { ...state, fullName: action.payload };
-    }
-    default:
-      return state;
-  }
-}
-
-export const createCustomer = (
-  fullName: string,
-  nationalId: string,
-): ICustomerAction => {
-  return {
-    type: 'customer/createCustomer',
-    payload: { fullName, nationalId, createdAt: new Date().toISOString() },
-  };
-};
-
-export const updateName = (fullName: string): ICustomerAction => {
-  return {
-    type: 'customer/updateName',
-    payload: fullName,
-  };
-};
+export const { createCustomer, updateName } = customerSlice.actions;
+export default customerSlice.reducer;
